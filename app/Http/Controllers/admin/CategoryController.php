@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -14,7 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.categories.index_category');
+        $categories = Category::all();
+        return view('admin.categories.index_category',compact('categories'));
     }
 
     /**
@@ -24,7 +27,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.add_category');
+        $categories = Category::all();
+        return view('admin.categories.add_category',compact('categories'));
     }
 
     /**
@@ -33,9 +37,13 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $categories = New Category;
+        $categories->create([
+            'name' => $request->get('name'),
+        ]);
+        return redirect('admin/categories/index')->with('alert','Add Categories Success');
     }
 
     /**
@@ -57,7 +65,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.categories.edit_category');
+        $categories = Category::findOrFail($id);
+        return view('admin.categories.edit_category',compact('categories'));
     }
 
     /**
@@ -67,9 +76,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        //
+        $categories = Category::findOrFail($id);
+        $categories->update([
+            'name' => $request->get('name'),
+        ]);
+        return redirect('admin/categories/index')->with('alert','Edit Category Success');
     }
 
     /**

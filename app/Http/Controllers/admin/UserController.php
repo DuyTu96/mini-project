@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
@@ -14,7 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('admin.users.index_user');
+        $users = User::all();
+        return view('admin.users.index_user',compact('users'));
     }
 
     /**
@@ -33,9 +36,22 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $password = $request->password;
+        $repassword = $request->repassword;
+        if ($password == $repassword) {
+            $users = new User;
+            $users->create([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'password' => bcrypt($request->get('password')),
+                'phone' => $request->get('phone'),
+            ]);
+            return redirect('admin/users/index')->with('alert','Add User Success');
+        }else {
+            return redirect('admin/users/add')->with('alert','Repassword Fail');
+        }
     }
 
     /**
@@ -57,7 +73,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.users.edit_user');
+        $users = User::findOrFail($id);
+        return view('admin.users.edit_user',compact('users'));
     }
 
     /**
@@ -67,9 +84,22 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        $password = $request->password;
+        $repassword = $request->repassword;
+        if ($password == $repassword) {
+            $users = User::findOrFail($id);
+            $users->update([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'password' => bcrypt($request->get('password')),
+                'phone' => $request->get('phone'),
+            ]);
+            return redirect('admin/users/index')->with('alert','Edit User Success');
+        }else {
+            return redirect('admin/users/add')->with('alert','Repassword Fail');
+        }
     }
 
     /**
@@ -80,6 +110,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $users = User::findOrFail($id);
+        $users->delete();
+        return redirect('admin/users/index')->with('alert','Delete User Success');
     }
 }

@@ -6,17 +6,17 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ url('admin/users/index') }}">
             <i class="fas fa-users"></i>|
             <span>Users</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ url('admin/products/index') }}">
             <i class="fas fa-box-open"></i>|
             <span>Products</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ url('admin/categories/index') }}">
             <i class="fas fa-clipboard-list"></i> |
             <span>Categories</span></a>
     </li>
